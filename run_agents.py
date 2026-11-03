@@ -2,9 +2,10 @@
 
 Based on the Assignment 4 multi-agent runner. Run from the project root:
 
-    uv run python run_incident_agents.py --mode start
-    uv run python run_incident_agents.py --mode test
-    uv run python run_incident_agents.py --mode test --agent coordinator
+    uv run --no-project python run_agents.py --mode start
+    uv run --no-project python run_agents.py --mode test
+    uv run --no-project python run_agents.py --mode test --agent coordinator
+    uv run --no-project python run_agents.py --mode test --agent knowledge
 
 Start the Observability MCP server separately before testing Monitoring:
 
@@ -12,7 +13,8 @@ Start the Observability MCP server separately before testing Monitoring:
 
 Assumes agents.agent_factory.create_all_agents() returns entries like:
     {"monitoring": {"agent": <ADK agent>, "card": <AgentCard>},
-     "coordinator": {"agent": <ADK agent>, "card": <AgentCard>}}
+     "coordinator": {"agent": <ADK agent>, "card": <AgentCard>},
+     "knowledge": {"agent": <ADK agent>, "card": <AgentCard>}}
 
 Written for the same A2A/ADK APIs as Assignment 4 (A2A SDK 0.3.x).
 """
@@ -62,7 +64,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Fallback ports for factory entries that contain only "agent" and "card".
-DEFAULT_PORTS = {"monitoring": 10020, "coordinator": 10023}
+DEFAULT_PORTS = {"monitoring": 10021, "coordinator": 10022, "knowledge": 10020}
 
 
 def server_port(name: str, info: dict[str, Any]) -> int:
@@ -208,6 +210,16 @@ async def test_agents(configs: dict[str, dict[str, Any]], selected: str) -> None
             "Use get_logs, get_metrics, and get_deployments through MCP. "
             "Report findings, evidence, and possible causes; do not execute remediation."
         ),
+        "knowledge": (
+            "Investigate incident INC-TEST-001 for service authentication-api. "
+            "Symptoms: elevated error rate, SQL connection timeouts, "
+            "and database connection pool exhaustion. "
+            "Use the search_knowledge RAG tool to search past incidents and runbooks "
+            "in ChromaDB. Report the matching historical incident IDs, runbook IDs, "
+            "previous resolutions, and relevant diagnostic steps. "
+            "Distinguish historical examples from confirmed causes of this incident. "
+            "Do not execute remediation."
+        ),
         "coordinator": (
             "Investigate incident INC-TEST-001 for service authentication-api. "
             "Alert: HIGH_ERROR_RATE, severity HIGH, error rate 18.5%, "
@@ -238,8 +250,8 @@ async def main_async(mode: str, selected: str) -> None:
     for name, info in configs.items():
         print_agent_card(name, info)
 
-    # Ensure the Coordinator and Monitoring Agent can find each other on the
-    # AgentCard URLs configured in agents/agent_cards.py.
+    # Ensure remote agent URLs in the Coordinator match the AgentCards
+    # configured in agents/agent_cards.py.
     servers = []
     for name, info in configs.items():
         app = create_agent_a2a_server(info["agent"], info["card"])
@@ -275,7 +287,7 @@ def main() -> None:
     parser.add_argument("--mode", choices=["start", "test"], default="start")
     parser.add_argument(
         "--agent",
-        choices=["monitoring", "coordinator", "all"],
+        choices=["monitoring", "coordinator", "knowledge", "all"],
         default="monitoring",
         help="Which agent to test when --mode test (default: monitoring)",
     )

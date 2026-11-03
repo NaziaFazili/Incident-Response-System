@@ -59,9 +59,9 @@ def create_agent() -> SequentialAgent:
 
         parallel_worker_agent = ParallelAgent(
             name="parallel_worker",
-            sub_agents=[remote_monitor_agent],
+            sub_agents=[remote_monitor_agent, remote_knowledge_agent],
         )
-        # , remote_knowledge_agent
+
         summary_agent = Agent(
             name="summary_agent",
             model=GEMINI_MODEL,
