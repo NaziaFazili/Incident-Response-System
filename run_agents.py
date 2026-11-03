@@ -109,16 +109,41 @@ def create_agent_a2a_server(agent: Any, agent_card: AgentCard) -> Any:
     executor = A2aAgentExecutor(runner=runner, config=A2aAgentExecutorConfig())
 
     class LoggingRequestHandler(DefaultRequestHandler):
+        def log_remediation_message(self, params):
+            """Log the incoming A2A message for the Remediation Agent."""
+
+            if agent.name != "remediation_agent":
+                return
+
+            message = getattr(params, "message", None)
+
+            if not message:
+                return
+
+            for part in message.parts:
+                text = getattr(part.root, "text", None)
+
+                if text:
+                    logger.info("[REMEDIATION] Received A2A message:\n%s", text)
+
         async def on_message_send(self, params, context=None):
             logger.info("[%s] Received A2A request", agent_card.name)
+
+            self.log_remediation_message(params)
+
             result = await super().on_message_send(params, context)
+
             logger.info("[%s] Finished A2A request", agent_card.name)
             return result
 
         async def on_message_send_stream(self, params, context=None):
             logger.info("[%s] Received streaming A2A request", agent_card.name)
+
+            self.log_remediation_message(params)
+
             async for item in super().on_message_send_stream(params, context):
                 yield item
+
             logger.info("[%s] Finished streaming A2A request", agent_card.name)
 
     handler = LoggingRequestHandler(
@@ -226,6 +251,18 @@ async def test_agents(configs: dict[str, dict[str, Any]], selected: str) -> None
             "detected at 2026-10-27T10:10:00Z. "
             "Delegate the investigation and summarize available evidence."
         ),
+        "remediation": (
+            "Create an HTN remediation plan for incident INC-TEST-001. "
+            "Service: authentication-api. "
+            "Investigation summary: Error rate increased to 18.5%, "
+            "SQL connection timeouts were detected, and database connection "
+            "pool exhaustion occurred after deployment version 2.4.1. "
+            "The previous version was 2.4.0. "
+            "A similar historical incident was resolved by rolling back "
+            "a faulty deployment. "
+            "Create ordered primitive and compound subgoals. "
+            "Do not execute remediation."
+        ),
     }
     names = list(configs) if selected == "all" else [selected]
     client = A2AClient()
@@ -287,7 +324,7 @@ def main() -> None:
     parser.add_argument("--mode", choices=["start", "test"], default="start")
     parser.add_argument(
         "--agent",
-        choices=["monitoring", "coordinator", "knowledge", "all"],
+        choices=["monitoring", "coordinator", "knowledge", "remediation", "all"],
         default="monitoring",
         help="Which agent to test when --mode test (default: monitoring)",
     )

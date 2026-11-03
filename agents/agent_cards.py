@@ -8,12 +8,10 @@ from a2a.types import (
 )
 
 from config.agents_config import (
-    COORDINATOR_AGENT_PORT,
     COORDINATOR_AGENT_URL,
-    KNOWLEDGE_AGENT_PORT,
     KNOWLEDGE_AGENT_URL,
-    MONITORING_AGENT_PORT,
     MONITORING_AGENT_URL,
+    REMEDIATION_AGENT_URL,
 )
 
 # from knowledge.agent import create_agent as create_knowledge_agent
@@ -89,29 +87,29 @@ def create_knowledge_agent_card() -> AgentCard:
         raise
 
 
-# def create_remediation_agent_card() -> AgentCard:
-#     return AgentCard(
-#         name="Remediation Agent",
-#         url="http://127.0.0.1:10022",
-#         description="Creates and ranks remediation plans using hierarchical task planning.",
-#         version="1.0.0",
-#         capabilities=AgentCapabilities(streaming=True),
-#         default_input_modes=["text/plain"],
-#         default_output_modes=["text/plain"],
-#         preferred_transport=TransportProtocol.jsonrpc,
-#         skills=[
-#             AgentSkill(
-#                 id="plan_remediation",
-#                 name="Plan Remediation",
-#                 description="Proposes remediation steps based on investigation findings.",
-#                 tags=["remediation", "planning", "HTN"],
-#                 examples=[
-#                     "Create a remediation plan for database connection pool exhaustion.",
-#                     "Rank recovery options for authentication-api.",
-#                 ],
-#             )
-#         ],
-#     )
+def create_remediation_agent_card() -> AgentCard:
+    return AgentCard(
+        name="Remediation Agent",
+        url=REMEDIATION_AGENT_URL,
+        description="Creates and ranks remediation plans using hierarchical task planning.",
+        version="1.0",
+        capabilities=AgentCapabilities(streaming=True),
+        default_input_modes=["text/plain"],
+        default_output_modes=["text/plain"],
+        preferred_transport=TransportProtocol.jsonrpc,
+        skills=[
+            AgentSkill(
+                id="plan_remediation",
+                name="Plan Remediation",
+                description="Proposes remediation steps based on investigation findings.",
+                tags=["remediation", "planning", "HTN"],
+                examples=[
+                    "Create a remediation plan for database connection pool exhaustion.",
+                    "Rank recovery options for authentication-api.",
+                ],
+            )
+        ],
+    )
 
 
 def create_coordinator_agent_card() -> AgentCard:

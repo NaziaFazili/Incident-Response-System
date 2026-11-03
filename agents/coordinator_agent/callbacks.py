@@ -33,3 +33,17 @@ def save_knowledge_output(callback_context: CallbackContext):
             )
             logger.info("Knowledge output saved to state.")
             break
+
+
+def save_remediation_output(callback_context: CallbackContext):
+    for event in reversed(callback_context.session.events):
+        if (
+            event.author == callback_context.agent_name
+            and event.content
+            and event.content.parts
+        ):
+            callback_context.state["remediation_output"] = "".join(
+                part.text or "" for part in event.content.parts
+            )
+            logger.info("Remediation output saved to state.")
+            break

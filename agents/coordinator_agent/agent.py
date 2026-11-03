@@ -14,10 +14,16 @@ from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 from agents.coordinator_agent.callbacks import (
     save_knowledge_output,
     save_monitoring_output,
+    save_remediation_output,
 )
 from agents.coordinator_agent.prompts import SUMMARY_INSTRUCTION
 from agents.shared import a2a_compat  # noqa: F401
-from config.agents_config import GEMINI_MODEL, KNOWLEDGE_AGENT_URL, MONITORING_AGENT_URL
+from config.agents_config import (
+    GEMINI_MODEL,
+    KNOWLEDGE_AGENT_URL,
+    MONITORING_AGENT_URL,
+    REMEDIATION_AGENT_URL,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +63,12 @@ def create_agent() -> SequentialAgent:
             after_agent_callback=save_knowledge_output,
         )
 
+        remote_remediation_agent = RemoteA2aAgent(
+            name="remediation_agent",
+            agent_card=f"{REMEDIATION_AGENT_URL}{AGENT_CARD_WELL_KNOWN_PATH}",
+            after_agent_callback=save_remediation_output,
+        )
+
         parallel_worker_agent = ParallelAgent(
             name="parallel_worker",
             sub_agents=[remote_monitor_agent, remote_knowledge_agent],
@@ -73,7 +85,11 @@ def create_agent() -> SequentialAgent:
 
         coordinator = SequentialAgent(
             name="coordinator_agent",
-            sub_agents=[parallel_worker_agent, summary_agent],
+            sub_agents=[
+                parallel_worker_agent,
+                summary_agent,
+                remote_remediation_agent,
+            ],
         )
 
         logger.info("Incident Response Router Agent created successfully")
