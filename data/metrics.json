@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2026-10-27T09:55:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 0.4,
+    "response_time_ms": 180
+  },
+  {
+    "timestamp": "2026-10-27T09:58:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 0.5,
+    "response_time_ms": 190
+  },
+  {
+    "timestamp": "2026-10-27T10:00:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 0.6,
+    "response_time_ms": 200
+  },
+  {
+    "timestamp": "2026-10-27T10:03:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 5.2,
+    "response_time_ms": 1200
+  },
+  {
+    "timestamp": "2026-10-27T10:05:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 12.8,
+    "response_time_ms": 2800
+  },
+  {
+    "timestamp": "2026-10-27T10:07:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 16.3,
+    "response_time_ms": 3500
+  },
+  {
+    "timestamp": "2026-10-27T10:10:00Z",
+    "service": "authentication-api",
+    "error_rate_pct": 18.5,
+    "response_time_ms": 4200
+  }
+]

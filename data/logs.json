@@ -1,0 +1,38 @@
+[
+  {
+    "timestamp": "2026-10-27T09:55:00Z",
+    "service": "authentication-api",
+    "level": "INFO",
+    "message": "Authentication request completed successfully"
+  },
+  {
+    "timestamp": "2026-10-27T09:58:00Z",
+    "service": "authentication-api",
+    "level": "INFO",
+    "message": "Authentication API operating normally"
+  },
+  {
+    "timestamp": "2026-10-27T10:03:00Z",
+    "service": "authentication-api",
+    "level": "ERROR",
+    "message": "SQL connection timeout while authenticating user"
+  },
+  {
+    "timestamp": "2026-10-27T10:05:00Z",
+    "service": "authentication-api",
+    "level": "ERROR",
+    "message": "HTTP 500 returned from /api/auth/login"
+  },
+  {
+    "timestamp": "2026-10-27T10:07:00Z",
+    "service": "authentication-api",
+    "level": "ERROR",
+    "message": "Database connection pool exhausted"
+  },
+  {
+    "timestamp": "2026-10-27T10:10:00Z",
+    "service": "authentication-api",
+    "level": "WARNING",
+    "message": "Authentication API error rate exceeded threshold"
+  }
+]

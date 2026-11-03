@@ -1,0 +1,58 @@
+[
+  {
+    "incident_id": "HIST-001",
+    "service": "authentication-api",
+    "title": "Authentication API database connection pool exhaustion",
+    "severity": "HIGH",
+    "symptoms": [
+      "Elevated API error rate",
+      "SQL connection timeouts",
+      "Slow API response times"
+    ],
+    "root_cause": "A database connection leak introduced during deployment caused the connection pool to become exhausted.",
+    "resolution": "Rolled back the affected deployment and verified that database connections and API error rates returned to normal.",
+    "lessons_learned": "Monitor active database connections and test connection disposal before production deployments."
+  },
+  {
+    "incident_id": "HIST-002",
+    "service": "payment-api",
+    "title": "Payment API latency caused by database performance degradation",
+    "severity": "HIGH",
+    "symptoms": [
+      "Increased API response times",
+      "Database query timeouts",
+      "Slow payment processing"
+    ],
+    "root_cause": "A missing database index caused expensive queries under high transaction volume.",
+    "resolution": "Added the appropriate database index and monitored query performance.",
+    "lessons_learned": "Review query execution plans and performance before deployment."
+  },
+  {
+    "incident_id": "HIST-003",
+    "service": "authentication-api",
+    "title": "Authentication failures caused by expired signing certificate",
+    "severity": "CRITICAL",
+    "symptoms": [
+      "Users unable to authenticate",
+      "Token validation failures",
+      "Authentication requests returning HTTP 401"
+    ],
+    "root_cause": "The authentication signing certificate expired.",
+    "resolution": "Renewed the certificate and verified successful authentication.",
+    "lessons_learned": "Implement certificate expiration alerts and automated renewal checks."
+  },
+  {
+    "incident_id": "HIST-004",
+    "service": "member-api",
+    "title": "Member API errors following configuration deployment",
+    "severity": "MEDIUM",
+    "symptoms": [
+      "Increased HTTP 500 errors",
+      "Configuration validation failures",
+      "Errors immediately following deployment"
+    ],
+    "root_cause": "A required configuration property was missing from the deployment environment.",
+    "resolution": "Restored the missing configuration and redeployed the service.",
+    "lessons_learned": "Validate environment configurations before releasing application updates."
+  }
+]

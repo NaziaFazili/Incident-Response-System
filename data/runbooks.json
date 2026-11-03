@@ -1,0 +1,83 @@
+[
+  {
+    "runbook_id": "RB-001",
+    "title": "Database Connection Pool Exhaustion",
+    "category": "database",
+    "description": "Troubleshooting elevated API errors caused by exhausted database connection pools.",
+    "symptoms": [
+      "SQL connection timeouts",
+      "High API error rate",
+      "Increased response times",
+      "Database connection pool exhausted"
+    ],
+    "diagnostic_steps": [
+      "Review application logs for database timeout errors.",
+      "Check active database connections and connection pool usage.",
+      "Review recent deployments for changes to database access.",
+      "Check whether database connections are being properly disposed."
+    ],
+    "remediation_options": [
+      "Consider rolling back a recent deployment if evidence identifies it as the cause.",
+      "Investigate and correct connection leaks.",
+      "Restart affected services only after assessing operational impact."
+    ],
+    "verification": [
+      "Confirm API error rates return below the configured threshold.",
+      "Verify database connection usage returns to normal.",
+      "Monitor API latency and service health."
+    ]
+  },
+  {
+    "runbook_id": "RB-002",
+    "title": "High API Error Rate",
+    "category": "application",
+    "description": "General investigation procedure for elevated API error rates.",
+    "symptoms": [
+      "HTTP 500 errors",
+      "High application error rate",
+      "Degraded API performance"
+    ],
+    "diagnostic_steps": [
+      "Identify affected endpoints and services.",
+      "Review application error logs.",
+      "Inspect CPU, memory, database, and network metrics.",
+      "Check recent deployments and configuration changes."
+    ],
+    "remediation_options": [
+      "Identify the underlying cause before taking action.",
+      "Consider rollback if the issue correlates with a faulty deployment.",
+      "Escalate to the appropriate service owner."
+    ],
+    "verification": [
+      "Confirm error rate returns to an acceptable level.",
+      "Verify affected endpoints respond successfully.",
+      "Monitor the service for recurring errors."
+    ]
+  },
+  {
+    "runbook_id": "RB-003",
+    "title": "Authentication Certificate Expiration",
+    "category": "security",
+    "description": "Troubleshooting authentication failures caused by certificate expiration.",
+    "symptoms": [
+      "Authentication failures",
+      "Token validation errors",
+      "Expired signing certificate"
+    ],
+    "diagnostic_steps": [
+      "Check authentication logs for certificate validation failures.",
+      "Verify certificate expiration dates.",
+      "Check the configured certificate thumbprint."
+    ],
+    "remediation_options": [
+      "Renew the expired certificate using the approved certificate management process.",
+      "Update the application certificate configuration.",
+      "Restart services if required by the approved procedure."
+    ],
+    "verification": [
+      "Confirm token validation succeeds.",
+      "Verify users can authenticate.",
+      "Check that certificate expiration monitoring is enabled."
+    ]
+  }
+]
