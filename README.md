@@ -3,7 +3,6 @@
 A local demonstration of an AI-assisted incident-response pipeline. 
 An incident alert can enter through **n8n** or a **direct Coordinator test prompt**. The Coordinator delegates investigation to Monitoring and Knowledge Agents, generates an investigation summary, and requests an HTN remediation plan. LangGraph human approval is required before simulated remediation execution.
 
-> ** Remediation is simulated; the application does not roll back real deployments or restart production services.**
 
 ## Architecture
 
@@ -38,7 +37,6 @@ The Coordinator can also be invoked directly using the test runner, without n8n.
 - **Python 3.11** (the project was developed using 3.11.17) and uv.
 - Project dependencies and model/API credentials configured for the Google ADK/A2A, MCP and RAG components.
 - **Docker Desktop** and **n8n** for the optional webhook-driven entry point.
-- A modern browser for FastAPI Swagger and the approval page.
 
 ## Initial setup
 
