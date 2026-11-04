@@ -33,4 +33,4 @@ build/
 *.egg-info/
 
 data/chroma_db/
-README.md
+

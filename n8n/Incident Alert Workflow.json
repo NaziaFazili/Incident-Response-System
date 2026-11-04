@@ -1,0 +1,117 @@
+{
+  "name": "Incident Alert Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "incident-alert",
+        "options": {}
+      },
+      "id": "2e20199e-4307-4ceb-8611-94ed243b8674",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        80
+      ],
+      "webhookId": "incident-alert-webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/api/incidents",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {}
+      },
+      "id": "b6dad94f-5faa-4bac-b94c-6e23415835fd",
+      "name": "Send Incident to FastAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "5a76e3d6-f3a6-4759-9e3e-fbb8eea6a6fa",
+              "leftValue": "={{ $json.body.severity }}",
+              "rightValue": "HIGH",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "8bcad666-c627-4419-8766-ea4e94d401de",
+              "leftValue": "={{ $json.body.error_rate_pct }}",
+              "rightValue": "={{ $json.body.threshold }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0b7e6653-7475-48b0-ab62-e1ddd1409275",
+      "name": "High Severity And Error rate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        80
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "High Severity And Error rate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Severity And Error rate": {
+      "main": [
+        [
+          {
+            "node": "Send Incident to FastAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0742a69b-eee1-496c-b21a-07f52b267efd",
+  "meta": {
+    "instanceId": "1ffa8b2e1c85552ad7ce2afe72491e98a420b4da26d32b7dcf1838e82dd140c0"
+  },
+  "id": "VUP7yvk2pfqLpBZa",
+  "tags": []
+}

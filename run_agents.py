@@ -246,10 +246,12 @@ async def test_agents(configs: dict[str, dict[str, Any]], selected: str) -> None
             "Do not execute remediation."
         ),
         "coordinator": (
-            "Investigate incident INC-TEST-001 for service authentication-api. "
+            "Investigate incident INC-TEST-005 for service authentication-api. "
             "Alert: HIGH_ERROR_RATE, severity HIGH, error rate 18.5%, "
-            "detected at 2026-10-27T10:10:00Z. "
-            "Delegate the investigation and summarize available evidence."
+            "detected at 2026-11-04T10:10:00Z. "
+            "Use the Monitoring Agent and Knowledge Agent to investigate. "
+            "Generate an investigation summary and an HTN remediation plan. "
+            "Recommend the best remediation action."
         ),
         "remediation": (
             "Create an HTN remediation plan for incident INC-TEST-001. "

@@ -21,7 +21,7 @@ def approval_page():
     return FileResponse(file_path)
 
 
-@app.get("/health")
-def health():
-    logger.info("Health check requested")
-    return {"status": "healthy"}
+# @app.get("/health")
+# def health():
+#     logger.info("Health check requested")
+#     return {"status": "healthy"}

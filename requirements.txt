@@ -29,4 +29,3 @@ requests>=2.31.0
 chromadb==1.5.9
 
 langgraph>=0.2.0
-email-validator

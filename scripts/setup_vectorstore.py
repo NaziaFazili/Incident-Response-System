@@ -16,13 +16,6 @@ from config.RAG_config import COLLECTION_NAME, DATA_DIR, VECTORSTORE_PATH
 
 logger = logging.getLogger(__name__)
 
-# PROJECT_ROOT = Path(__file__).resolve().parent.parent
-# DATA_DIR = Path(os.getenv("DATA_DIR", "data"))
-# # DATA_DIR = PROJECT_ROOT / "data"
-# VECTORSTORE_PATH = DATA_DIR / "chroma_db"
-
-# COLLECTION_NAME = "incident_knowledge"
-
 
 def load_documents() -> tuple[list, list, list]:
     """Load historical incidents and runbooks."""

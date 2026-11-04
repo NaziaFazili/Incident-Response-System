@@ -1,11 +1,12 @@
 import logging
 
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr
+from fastapi import APIRouter, BackgroundTasks, HTTPException
+from pydantic import BaseModel
 
 from config.logging_config import configure_logging
 from models.incident import Incident, IncidentAlertRequest
 from services.approval_service import request_approval, submit_decision
+from services.coordinator_trigger_service import trigger_coordinator
 from services.incident_service import IncidentService
 
 configure_logging()
@@ -17,10 +18,21 @@ incident_service = IncidentService()
 
 
 @router.post("", response_model=Incident, status_code=201)
-def create_incident(alert: IncidentAlertRequest):
+def create_incident(alert: IncidentAlertRequest, background_tasks: BackgroundTasks):
     """Receive an incident alert from n8n."""
 
-    return incident_service.create_incident(alert)
+    incident = incident_service.create_incident(alert)
+
+    logger.info("[INCIDENT] Created incident: %s", incident.incident_id)
+
+    background_tasks.add_task(
+        trigger_coordinator,
+        incident.model_dump(mode="json"),
+    )
+
+    logger.info("[INCIDENT] Coordinator task scheduled")
+
+    return incident
 
 
 @router.get("/{incident_id}", response_model=Incident)

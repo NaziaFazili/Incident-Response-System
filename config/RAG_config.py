@@ -2,7 +2,6 @@
 Configuration for RAG
 """
 
-import logging
 import os
 from pathlib import Path
 

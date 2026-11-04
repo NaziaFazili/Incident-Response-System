@@ -15,19 +15,25 @@ ALLOWED_ACTIONS = {
 def execute_remediation(incident_id: str, action: str) -> dict:
     """Simulate a remediation action after human approval."""
 
-    if action not in ALLOWED_ACTIONS:
+    action_lower = action.lower()
+
+    if "rollback" in action_lower:
+        action_type = "rollback_deployment"
+    elif "restart" in action_lower:
+        action_type = "restart_service"
+    else:
         raise ValueError(f"Unsupported remediation action: {action}")
 
-    action = ALLOWED_ACTIONS[action]
     logger.info(
         "[REMEDIATION] Simulating %s for incident %s",
-        action,
+        action_type,
         incident_id,
     )
 
     return {
         "incident_id": incident_id,
-        "action": action,
+        "action": action_type,
+        "original_action": action,
         "status": "SUCCESS",
-        "message": f"Simulated {action} completed successfully.",
+        "message": f"Simulated {action_type} completed successfully.",
     }
