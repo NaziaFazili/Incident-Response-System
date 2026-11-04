@@ -11,7 +11,7 @@ This project is an AI-assisted incident response system. When an application has
 flowchart TD
     A[Postman: sample alert] --> B[n8n Webhook and IF filter]
     B -->|HIGH severity + Error rate| C[FastAPI: create incident]
-    C -->|Background task / A2A| D[Coordinator Agent]
+    C --> D[Coordinator Agent]
     M[Manual Coordinator prompt] --> D
     D --> E[Monitoring Agent]
     D --> F[Knowledge Agent]
@@ -73,8 +73,6 @@ I chose **Google ADK and A2A instead of using one CrewAI crew** because I wanted
 - **Parallel investigation:** Monitoring and Knowledge work at the same time because neither needs the other's result before starting.
 - **Separate planning and execution:** The AI recommends an action, but it cannot execute it directly. LangGraph requires the human decision first.
 - **Simple HTML approval page:** This was enough to demonstrate HITL without building a larger frontend.
-- **Restricted simulation:** Only recognized rollback/restart actions are simulated. Unknown actions are rejected. Matching action names by keywords is a demo shortcut, not a safe production authorization rule.
-- **Two test paths:** n8n demonstrates automatic alert intake; the direct Coordinator prompt makes it easier to test the agents separately.
 
 ---
 
@@ -90,10 +88,9 @@ For example:
 |---|---|
 | **Prepare remediation** | Collect diagnostics; request human approval. |
 | **Restore service** | Roll back a deployment; restart a service if appropriate. |
-| **Verify recovery** | Check error rate; check service health. |
+
 
 This approach fits incident response because restoring a service often involves several ordered steps, not just one command. It also makes the AI's recommendation easier for a person to review. The Remediation Agent uses the investigation report and relevant past incidents to propose and rank possible actions.
-
 
 
 ## 8. Coordination Model and Alternatives
@@ -117,7 +114,6 @@ This project demonstrates the main ideas, but it has limitations:
 
 - **Simulated data and actions:** Monitoring reads sample data, and rollback/restart actions are simulated.
 - **Temporary approval state:** LangGraph currently uses in-memory storage. Pending approvals can disappear when FastAPI restarts.
-- **LLM output can vary:** Action names and plan steps are not always consistent. Keyword matching is not enough for real execution.
 - **Limited security:** Production use would need authentication, permissions, validation, and secure communication.
 
 **Future improvements:** Use live monitoring data, store approvals in a database, add security controls, and confirm service recovery after execution.
