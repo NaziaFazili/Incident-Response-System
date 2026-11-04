@@ -1,7 +1,15 @@
-from fastapi import APIRouter, HTTPException
+import logging
 
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, EmailStr
+
+from config.logging_config import configure_logging
 from models.incident import Incident, IncidentAlertRequest
+from services.approval_service import request_approval, submit_decision
 from services.incident_service import IncidentService
+
+configure_logging()
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/incidents", tags=["Incidents"])
 
@@ -25,3 +33,41 @@ def get_incident(incident_id: str):
         raise HTTPException(status_code=404, detail="Incident not found")
 
     return incident
+
+
+# -------------------- End points for Approval for LangGraph interrupt
+class ApprovalRequest(BaseModel):
+    recommended_action: str
+
+
+class ApprovalDecisionRequest(BaseModel):
+    approved: bool
+    comments: str = ""
+
+
+# Start the LangGraph HITL approval workflow
+@router.post("/{incident_id}/request-approval")
+def start_approval(incident_id: str, request: ApprovalRequest):
+    try:
+        return request_approval(
+            incident_id,
+            request.recommended_action,
+        )
+    except Exception as ex:
+        logger.exception(
+            "[HITL] Error requesting remediation approval for %s",
+            incident_id,
+        )
+    raise HTTPException(
+        status_code=500,
+        detail="Failed to start remediation approval workflow.",
+    )
+
+
+# Approve or reject the proposed remediation
+@router.post("/{incident_id}/decision")
+def decide_approval(incident_id: str, request: ApprovalDecisionRequest):
+    try:
+        return submit_decision(incident_id, request.approved, request.comments)
+    except ValueError as ex:
+        raise HTTPException(status_code=400, detail=str(ex))

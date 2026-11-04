@@ -24,6 +24,8 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 # MCP Server Configuration
 MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://localhost:8080")
 
+INCIDENT_API_BASE_URL = "http://127.0.0.1:8000"
+
 # Agent Server Ports
 KNOWLEDGE_AGENT_PORT = 10020
 MONITORING_AGENT_PORT = 10021
