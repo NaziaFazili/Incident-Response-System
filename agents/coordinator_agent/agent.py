@@ -12,6 +12,7 @@ from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
 from agents.coordinator_agent.callbacks import (
+    save_incident_context,
     save_knowledge_output,
     save_monitoring_output,
     save_remediation_output,
@@ -90,6 +91,7 @@ def create_agent() -> SequentialAgent:
                 summary_agent,
                 remote_remediation_agent,
             ],
+            before_agent_callback=save_incident_context,
         )
 
         logger.info("Incident Response Router Agent created successfully")

@@ -33,6 +33,7 @@ async def trigger_coordinator(incident: dict):
                     {
                         "kind": "text",
                         "text": (
+                            f"Incident ID: {incident_id}\n"
                             f"Investigate this incident and generate a remediation plan:\n"
                             f"{json.dumps(incident, indent=2)}"
                         ),
